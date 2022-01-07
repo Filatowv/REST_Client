@@ -5,18 +5,13 @@ import com.filatov.rest_client.model.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
 import java.util.Objects;
-
 
 @Component
 public class Communication {
-
 
     private final RestTemplate template;
     private final HttpHeaders headers;
@@ -28,42 +23,40 @@ public class Communication {
         this.headers = headers;
     }
 
-
-    public void cookeAllUser() {
-        ResponseEntity<String> forEntity = template.getForEntity(URL, String.class);
-        cookie = Objects.requireNonNull(forEntity.getHeaders().get("Set-Cookie")).toString();
-        System.out.println(cookie);
+    public ResponseEntity<String> cookeUser() {
+        ResponseEntity<String> response = template.getForEntity(URL, String.class);
+        cookie = Objects.requireNonNull(response.getHeaders().getFirst("Set-Cookie"));
+        System.out.println("Result method 'cookeUser' = " + response);
+        System.out.println("Set-Cookie method 'cookeUser' = " + cookie);
+        return response;
 
     }
 
     public ResponseEntity<String> newUser (User user) {
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.add("cookie",cookie);
         HttpEntity<User> entity = new HttpEntity<User>(user,headers);
-        ResponseEntity<String> response = template.exchange(URL,HttpMethod.POST,entity,String.class);
-        cookie = response.getBody();
-        System.out.println(cookie);
+        ResponseEntity<String> response = template.postForEntity(URL,entity,String.class);
+        String result = response.getBody();
+        System.out.println("Result method 'newUser' = " + result);
         return response;
     }
 
-    public String updateUser (int id, User user) {
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+    public ResponseEntity<String> updateUser (User user) {
         HttpEntity<User> entity = new HttpEntity<User>(user,headers);
-        String str = template.exchange(URL + "/" + id,HttpMethod.POST,entity,String.class).getBody();
-        System.out.println(str);
-        cookie = cookie + str;
-
-        return cookie;
+        ResponseEntity<String> response = template.exchange(URL,HttpMethod.PUT,entity,String.class);
+        String result = response.getBody();
+        System.out.println("Result method 'updateUser' = " + result);
+        return response;
     }
 
-
-    public User getUser (int id) {
-        User user = template.getForObject(URL +"/" + id,
-                User.class);
-        return user;
+    public ResponseEntity<String> deleteUser (int id) {
+        HttpEntity<User> entity = new HttpEntity<User>(headers);
+        ResponseEntity<String> response = template.exchange(URL + "/" + id,HttpMethod.DELETE,entity,String.class);
+        String result = response.getBody();
+        System.out.println("Result method 'deleteUser' = " + result);
+        return response;
     }
-
-
-
 
     public RestTemplate getTemplate() {
         return template;
@@ -72,4 +65,5 @@ public class Communication {
     public HttpHeaders getHeaders() {
         return headers;
     }
+
 }

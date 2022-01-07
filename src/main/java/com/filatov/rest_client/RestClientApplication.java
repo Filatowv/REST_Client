@@ -4,7 +4,6 @@ import com.filatov.rest_client.component.Communication;
 import com.filatov.rest_client.model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
@@ -16,15 +15,20 @@ public class RestClientApplication {
         SpringApplication.run(RestClientApplication.class, args);
 
 
-        User user = new User(3L,"James","Brown", (byte) 32);
-        User user2 = new User(3L,"Thomas","Shelby", (byte) 32);
+        User newUser = new User(3L,"James","Brown", (byte) 32);
+        User updateUser = new User(3L,"Thomas","Shelby", (byte) 32);
+
         Communication communication = new Communication(getRestTemplate(),getHttp());
-        communication.cookeAllUser();
-        communication.newUser(user);
-//        communication.updateUser(3,user2);
+
+        communication.cookeUser();
+
+        communication.newUser(newUser);
+
+        communication.updateUser(updateUser);
+
+        communication.deleteUser(3);
 
     }
-
 
 
     @Bean
