@@ -1,11 +1,5 @@
 package com.filatov.rest_client.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConstructorBinding;
-
 
 public class User {
 
