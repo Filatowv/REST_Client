@@ -28,8 +28,8 @@ public class Communication {
         cookie = Objects.requireNonNull(response.getHeaders().getFirst("Set-Cookie"));
         System.out.println("Result method 'cookeUser' = " + response);
         System.out.println("Set-Cookie method 'cookeUser' = " + cookie);
-        return response;
 
+        return response;
     }
 
     public ResponseEntity<String> newUser (User user) {
@@ -38,15 +38,16 @@ public class Communication {
         ResponseEntity<String> response = template.postForEntity(URL,entity,String.class);
         String result = response.getBody();
         System.out.println("Result method 'newUser' = " + result);
+
         return response;
     }
-
 
     public ResponseEntity<String> updateUser (User user) {
         HttpEntity<User> entity = new HttpEntity<User>(user,headers);
         ResponseEntity<String> response = template.exchange(URL,HttpMethod.PUT,entity,String.class);
         String result = response.getBody();
         System.out.println("Result method 'updateUser' = " + result);
+
         return response;
     }
 
@@ -55,15 +56,7 @@ public class Communication {
         ResponseEntity<String> response = template.exchange(URL + "/" + id,HttpMethod.DELETE,entity,String.class);
         String result = response.getBody();
         System.out.println("Result method 'deleteUser' = " + result);
+
         return response;
     }
-
-    public RestTemplate getTemplate() {
-        return template;
-    }
-
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
-
 }
